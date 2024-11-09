@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { defaultStyles } from "@/constants";
-import Recursive from "@/pages/dashboard/funnels/editor/_components/funnel-editor/funnel-edit-components/Recursive";
+import Recursive from "@/pages/dashboard/funnels/editor/_components/funnel-editor/funnel-edit-components/recursive";
 import { useEditor } from "@/providers/editor/editor-provider";
 import clsx from "clsx";
 import PropTypes from "prop-types";
