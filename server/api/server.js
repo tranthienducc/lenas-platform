@@ -2,15 +2,13 @@ const dotenv = require("dotenv");
 dotenv.config();
 const express = require("express");
 const cors = require("cors");
-const { stripe } = require("./lib/stripe/index.js");
-const Stripe = require("stripe");
-const BodyParser = require("body-parser");
-const { subscriptionCreated } = require("./lib/stripe/stripeActions.js");
+const { stripe } = require("../src/lib/stripe/index.js");
+const { subscriptionCreated } = require("../src/lib/stripe/stripeActions.js");
 const {
   pathMatcher,
   corsOptions,
   authMiddleware,
-} = require("./lib/middleware/middleware.js");
+} = require("../src/lib/middleware/middleware.js");
 
 const app = express();
 
@@ -44,7 +42,6 @@ app.post(
         });
       }
 
-      // Chuyển body thành chuỗi nếu nó là buffer
       const payload = req.body.toString();
 
       const stripeEvent = stripe.webhooks.constructEvent(
