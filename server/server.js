@@ -14,15 +14,6 @@ const {
 
 const app = express();
 
-app.use(express.json());
-app.use(cors(corsOptions));
-
-app.use(pathMatcher);
-app.use(authMiddleware);
-
-console.log("dqd", pathMatcher);
-console.log(authMiddleware);
-
 const stripeWebhookEvents = new Set([
   "product.created",
   "product.updated",
@@ -159,6 +150,28 @@ app.post("/api/stripe/create-checkout-session", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+app.post("/api/stripe/token", async (req, res) => {
+  try {
+    const { code } = req.body;
+
+    const response = await stripe.oauth.token({
+      grant_type: "authorization_code",
+      code: code,
+    });
+
+    res.json(response);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to get Stripe token" });
+  }
+});
+
+app.use(express.json());
+app.use(cors(corsOptions));
+
+app.use(pathMatcher);
+app.use(authMiddleware);
 
 app.post("/api/stripe/create-customer", async (req, res) => {
   const { address, email, name, shipping } = req.body;

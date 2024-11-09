@@ -2,7 +2,9 @@ import CreateAgencyForm from "@/components/forms/CreateAgencyForm";
 import {
   useGetAllAgency,
   useGetAuthUserDetail,
+  useGetCollectSubAccount,
   useGetCurrentUser,
+  useVerifyUserAcceptIn,
 } from "@/lib/tanstack-query/queries";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect } from "react";
@@ -10,24 +12,30 @@ import { useEffect } from "react";
 const AgencyPage = () => {
   const { data: authUser } = useGetCurrentUser();
   const { data: agencies } = useGetAllAgency();
+  const { data: agencyId } = useVerifyUserAcceptIn();
   const { data: user } = useGetAuthUserDetail();
+  const { data: subAccount } = useGetCollectSubAccount(agencyId);
   const searchParams = useSearch({ strict: false });
   const navigate = useNavigate();
 
-  console.log("verify-auth", user?.agency?.SubAccount);
-  const agencyId = agencies?.[0]?.id;
+  const agencyInviteId = agencyId ? agencyId : agencies?.[0]?.id;
+
+  console.log("subAccountId", agencies?.[0]?.SubAccount?.[0].id);
 
   useEffect(() => {
-    if (agencyId) {
-      if (user?.role === "SUBACCOUNT_GUEST") {
-        navigate({ to: "/subaccount" });
+    if (agencyInviteId) {
+      if (
+        (user?.role === "SUBACCOUNT_GUEST") |
+        (user?.role === "SUBACCOUNT_USER")
+      ) {
+        navigate({ to: `/subaccount/${agencies?.[0]?.SubAccount?.[0].id}` });
       } else if (
         user?.role === "AGENCY_OWNER" ||
         user?.role === "AGENCY_ADMIN"
       ) {
         if (searchParams.plan) {
           navigate({
-            to: `/dashboard/${agencyId}/billing?plan=${searchParams?.plan}`,
+            to: `/dashboard/${agencyInviteId}/billing?plan=${searchParams?.plan}`,
           });
         }
         if (searchParams.state) {
@@ -38,12 +46,12 @@ const AgencyPage = () => {
           navigate({
             to: `/dashboard/${stateAgencyId}/${statePath}?code=${searchParams?.code}`,
           });
-        } else navigate({ to: `/dashboard/${agencyId}` });
+        } else navigate({ to: `/dashboard/${agencyInviteId}` });
       } else {
         console.log("not authenticated");
       }
     }
-  }, [agencyId, user, searchParams, navigate]);
+  }, [agencyInviteId, user, searchParams, navigate, subAccount?.id]);
 
   return (
     <section className="flex flex-col items-center w-full h-screen max-w-full mt-28">

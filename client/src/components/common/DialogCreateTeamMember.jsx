@@ -4,25 +4,19 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { PlusIcon } from "lucide-react";
 import PropTypes from "prop-types";
 import { useState } from "react";
 
 const DialogCreateTeamMember = ({ agencyId }) => {
   const [isOpen, setIsOpen] = useState(false);
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger>
-        <Button type="button" className="flex gap-2 px-4 py-2 w-fit">
-          <PlusIcon size={15} />
-          <span>Add Team Member</span>
-        </Button>
+        <Button variant="outline">Add Team Member</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -31,9 +25,7 @@ const DialogCreateTeamMember = ({ agencyId }) => {
             Invite a new member to join your team.
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter>
-          <SendInvitation agencyId={agencyId} />
-        </DialogFooter>
+        <SendInvitation agencyId={agencyId} setIsOpen={setIsOpen} />
       </DialogContent>
     </Dialog>
   );

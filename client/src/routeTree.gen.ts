@@ -16,9 +16,11 @@ import { Route as LoginImport } from './routes/login'
 import { Route as AgencyImport } from './routes/agency'
 import { Route as PathImport } from './routes/$path'
 import { Route as DomainImport } from './routes/$domain'
+import { Route as ChangelogImport } from './routes/$changelog'
 import { Route as IndexImport } from './routes/index'
 import { Route as SubaccountIdImport } from './routes/subaccount/$id'
 import { Route as ProfileIdImport } from './routes/profile/$id'
+import { Route as FeaturesDrawImport } from './routes/features/draw'
 import { Route as EditProfileIdImport } from './routes/edit-profile/$id'
 import { Route as DashboardIdImport } from './routes/dashboard/$id'
 import { Route as SubaccountIdSettingImport } from './routes/subaccount/$id/setting'
@@ -66,6 +68,11 @@ const DomainRoute = DomainImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ChangelogRoute = ChangelogImport.update({
+  path: '/$changelog',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
@@ -78,6 +85,11 @@ const SubaccountIdRoute = SubaccountIdImport.update({
 
 const ProfileIdRoute = ProfileIdImport.update({
   path: '/profile/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const FeaturesDrawRoute = FeaturesDrawImport.update({
+  path: '/features/draw',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -193,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/$changelog': {
+      id: '/$changelog'
+      path: '/$changelog'
+      fullPath: '/$changelog'
+      preLoaderRoute: typeof ChangelogImport
+      parentRoute: typeof rootRoute
+    }
     '/$domain': {
       id: '/$domain'
       path: '/$domain'
@@ -240,6 +259,13 @@ declare module '@tanstack/react-router' {
       path: '/edit-profile/$id'
       fullPath: '/edit-profile/$id'
       preLoaderRoute: typeof EditProfileIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/features/draw': {
+      id: '/features/draw'
+      path: '/features/draw'
+      fullPath: '/features/draw'
+      preLoaderRoute: typeof FeaturesDrawImport
       parentRoute: typeof rootRoute
     }
     '/profile/$id': {
@@ -437,6 +463,7 @@ const SubaccountIdRouteWithChildren = SubaccountIdRoute._addFileChildren(
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$changelog': typeof ChangelogRoute
   '/$domain': typeof DomainRoute
   '/$path': typeof PathRoute
   '/agency': typeof AgencyRoute
@@ -444,6 +471,7 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/dashboard/$id': typeof DashboardIdRouteWithChildren
   '/edit-profile/$id': typeof EditProfileIdRoute
+  '/features/draw': typeof FeaturesDrawRoute
   '/profile/$id': typeof ProfileIdRoute
   '/subaccount/$id': typeof SubaccountIdRouteWithChildren
   '/dashboard/$id/ai': typeof DashboardIdAiRoute
@@ -467,6 +495,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$changelog': typeof ChangelogRoute
   '/$domain': typeof DomainRoute
   '/$path': typeof PathRoute
   '/agency': typeof AgencyRoute
@@ -474,6 +503,7 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/dashboard/$id': typeof DashboardIdRouteWithChildren
   '/edit-profile/$id': typeof EditProfileIdRoute
+  '/features/draw': typeof FeaturesDrawRoute
   '/profile/$id': typeof ProfileIdRoute
   '/subaccount/$id': typeof SubaccountIdRouteWithChildren
   '/dashboard/$id/ai': typeof DashboardIdAiRoute
@@ -498,6 +528,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/$changelog': typeof ChangelogRoute
   '/$domain': typeof DomainRoute
   '/$path': typeof PathRoute
   '/agency': typeof AgencyRoute
@@ -505,6 +536,7 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/dashboard/$id': typeof DashboardIdRouteWithChildren
   '/edit-profile/$id': typeof EditProfileIdRoute
+  '/features/draw': typeof FeaturesDrawRoute
   '/profile/$id': typeof ProfileIdRoute
   '/subaccount/$id': typeof SubaccountIdRouteWithChildren
   '/dashboard/$id/ai': typeof DashboardIdAiRoute
@@ -530,6 +562,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$changelog'
     | '/$domain'
     | '/$path'
     | '/agency'
@@ -537,6 +570,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/dashboard/$id'
     | '/edit-profile/$id'
+    | '/features/draw'
     | '/profile/$id'
     | '/subaccount/$id'
     | '/dashboard/$id/ai'
@@ -559,6 +593,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/$changelog'
     | '/$domain'
     | '/$path'
     | '/agency'
@@ -566,6 +601,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/dashboard/$id'
     | '/edit-profile/$id'
+    | '/features/draw'
     | '/profile/$id'
     | '/subaccount/$id'
     | '/dashboard/$id/ai'
@@ -588,6 +624,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/$changelog'
     | '/$domain'
     | '/$path'
     | '/agency'
@@ -595,6 +632,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/dashboard/$id'
     | '/edit-profile/$id'
+    | '/features/draw'
     | '/profile/$id'
     | '/subaccount/$id'
     | '/dashboard/$id/ai'
@@ -619,6 +657,7 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ChangelogRoute: typeof ChangelogRoute
   DomainRoute: typeof DomainRoute
   PathRoute: typeof PathRoute
   AgencyRoute: typeof AgencyRoute
@@ -626,12 +665,14 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   DashboardIdRoute: typeof DashboardIdRouteWithChildren
   EditProfileIdRoute: typeof EditProfileIdRoute
+  FeaturesDrawRoute: typeof FeaturesDrawRoute
   ProfileIdRoute: typeof ProfileIdRoute
   SubaccountIdRoute: typeof SubaccountIdRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ChangelogRoute: ChangelogRoute,
   DomainRoute: DomainRoute,
   PathRoute: PathRoute,
   AgencyRoute: AgencyRoute,
@@ -639,6 +680,7 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   DashboardIdRoute: DashboardIdRouteWithChildren,
   EditProfileIdRoute: EditProfileIdRoute,
+  FeaturesDrawRoute: FeaturesDrawRoute,
   ProfileIdRoute: ProfileIdRoute,
   SubaccountIdRoute: SubaccountIdRouteWithChildren,
 }
@@ -656,6 +698,7 @@ export const routeTree = rootRoute
       "filePath": "__root.jsx",
       "children": [
         "/",
+        "/$changelog",
         "/$domain",
         "/$path",
         "/agency",
@@ -663,12 +706,16 @@ export const routeTree = rootRoute
         "/pricing",
         "/dashboard/$id",
         "/edit-profile/$id",
+        "/features/draw",
         "/profile/$id",
         "/subaccount/$id"
       ]
     },
     "/": {
       "filePath": "index.jsx"
+    },
+    "/$changelog": {
+      "filePath": "$changelog.jsx"
     },
     "/$domain": {
       "filePath": "$domain.jsx"
@@ -699,6 +746,9 @@ export const routeTree = rootRoute
     },
     "/edit-profile/$id": {
       "filePath": "edit-profile/$id.jsx"
+    },
+    "/features/draw": {
+      "filePath": "features/draw.jsx"
     },
     "/profile/$id": {
       "filePath": "profile/$id.jsx"

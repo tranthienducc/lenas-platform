@@ -16,7 +16,6 @@ import { useModal } from "@/providers/modal-provider";
 import {
   closestCenter,
   DndContext,
-  DragOverlay,
   MouseSensor,
   TouchSensor,
   useSensor,
@@ -38,7 +37,6 @@ const FunnelSteps = ({ funnel, subAccountId, pages, funnelId, refetch }) => {
   const { setOpen } = useModal();
   const [pagesState, setPagesState] = useState(pages);
   const [activePage, setActivePage] = useState(pages?.[0]?.id);
-  const [draggedPage, setDraggedPage] = useState(null);
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -57,17 +55,18 @@ const FunnelSteps = ({ funnel, subAccountId, pages, funnelId, refetch }) => {
   const handlePageClick = (e, page) => {
     e.stopPropagation();
     setClickedPage(page);
-    setActivePage(page?.id || "default-id");
+    setActivePage(page?.id);
   };
 
   const handleDragStart = (event) => {
     const { active } = event;
-    setDraggedPage(pagesState?.find((page) => page?.id === active?.id));
+    const data = pagesState?.find((page) => page?.id === active?.id);
+
+    return data;
   };
 
   const handleDragEnd = async (event) => {
     const { active, over } = event;
-    setDraggedPage(null);
 
     if (!over || active.id === over.id) return;
 
@@ -100,7 +99,7 @@ const FunnelSteps = ({ funnel, subAccountId, pages, funnelId, refetch }) => {
       );
 
       toast.success("Page order updated");
-      if (refetch) await refetch();
+      refetch();
     } catch (error) {
       console.error("Error updating page order:", error);
       toast.error("Failed to update page order");
@@ -117,7 +116,7 @@ const FunnelSteps = ({ funnel, subAccountId, pages, funnelId, refetch }) => {
               <Check />
               Funnel Steps
             </div>
-            {pagesState?.length ? (
+            {pagesState?.length > 0 ? (
               <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
@@ -125,30 +124,25 @@ const FunnelSteps = ({ funnel, subAccountId, pages, funnelId, refetch }) => {
                 onDragEnd={handleDragEnd}
               >
                 <SortableContext
-                  items={pagesState}
+                  items={pagesState?.map((page) => page?.id)}
                   strategy={verticalListSortingStrategy}
                 >
-                  {pagesState?.map((page) => (
-                    <div
-                      key={page.id}
-                      className="relative"
-                      onClick={(e) => handlePageClick(e, page)}
-                    >
-                      <FunnelStepCard
-                        funnelPage={page}
-                        activePage={page.id === activePage}
-                      />
-                    </div>
-                  ))}
-                </SortableContext>
-                <DragOverlay>
-                  {draggedPage && (
-                    <FunnelStepCard
-                      funnelPage={draggedPage}
-                      activePage={draggedPage.id === activePage}
-                    />
+                  {pagesState?.map(
+                    (page) =>
+                      page && (
+                        <div
+                          key={page?.id}
+                          className="relative"
+                          onClick={(e) => handlePageClick(e, page)}
+                        >
+                          <FunnelStepCard
+                            activePage={page?.id === activePage}
+                            funnelPage={page || {}}
+                          />
+                        </div>
+                      )
                   )}
-                </DragOverlay>
+                </SortableContext>
               </DndContext>
             ) : (
               <div className="py-6 text-center text-muted-foreground">

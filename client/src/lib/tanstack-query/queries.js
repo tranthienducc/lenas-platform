@@ -117,7 +117,7 @@ export const useGetChargesFromStripe = (agencySubscription) => {
     queryKey: [QUERY_KEYS.GET_CHARGES_FROM_STRIPE, agencySubscription],
     queryFn: async () => {
       const charges = await stripe.charges.list({
-        limit: 50,
+        limit: 10,
         customer: agencySubscription?.customerId,
       });
 

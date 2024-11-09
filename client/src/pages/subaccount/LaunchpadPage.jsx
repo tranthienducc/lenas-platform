@@ -8,38 +8,32 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { updateAgencyStripeAccount } from "@/lib/actions/agency/update-agency-stripe-acc";
-import { useGetAgencyId } from "@/lib/tanstack-query/queries";
+import { stripe } from "@/lib/stripe";
+import { useGetSubaccountDetails } from "@/lib/tanstack-query/queries";
 import { getStripeOAuthLink } from "@/lib/utils";
-import { Link, useParams, useRouter, useSearch } from "@tanstack/react-router";
+import { Link, useParams, useSearch } from "@tanstack/react-router";
 import { CheckCircleIcon } from "lucide-react";
 import { useEffect } from "react";
 
 const LaunchpadPage = () => {
   const { id } = useParams({ strict: false });
   const searchParams = useSearch({ strict: false });
-  const router = useRouter();
+  const { data: subAccountDetails } = useGetSubaccountDetails(id);
 
-  const { data: agencyDetails } = useGetAgencyId(id);
   let connectStripeAccount = false;
-  const code = searchParams?.code;
 
   useEffect(() => {
     const handleStripeOAuth = async () => {
       if (searchParams?.code) {
-        if (!agencyDetails?.connectAccountId) {
+        if (!subAccountDetails?.connectAccountId) {
           try {
-            const response = await fetch("/api/stripe/token", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ code }),
+            const response = await stripe.oauth.token({
+              grant_type: "authorization_code",
+              code: searchParams.code,
             });
-            const data = await response.json();
-
             await updateAgencyStripeAccount({
               agencyId: id,
-              connectAccountId: data.stripe_user_id,
+              connectAccountId: response.stripe_user_id,
             });
             connectStripeAccount = true;
           } catch (error) {
@@ -50,28 +44,27 @@ const LaunchpadPage = () => {
     };
 
     handleStripeOAuth();
-  }, [searchParams, agencyDetails]);
+  }, [searchParams, subAccountDetails]);
 
-  if (!agencyDetails) return;
+  if (!subAccountDetails) return;
 
-  const agencyExist =
-    agencyDetails.name &&
-    agencyDetails.address &&
-    agencyDetails.agencyLogo &&
-    agencyDetails.city &&
-    agencyDetails.companyPhone &&
-    agencyDetails.companyEmail &&
-    agencyDetails.zipCode &&
-    agencyDetails.state &&
-    agencyDetails.country;
+  const subAccountExists =
+    subAccountDetails.name &&
+    subAccountDetails.address &&
+    subAccountDetails.subAccountLogo &&
+    subAccountDetails.city &&
+    subAccountDetails.companyPhone &&
+    subAccountDetails.companyEmail &&
+    subAccountDetails.zipCode &&
+    subAccountDetails.state &&
+    subAccountDetails.country;
 
   const stripeOAuthLink = getStripeOAuthLink(
-    "agency",
-    `launchpad___${agencyDetails.id}`
+    "dashboard",
+    `launchpad___${subAccountDetails.id}`
   );
 
-  console.log("id", agencyDetails.connectAccountId);
-  console.log("agency-details", router.state.location.search);
+  console.log("id", subAccountExists);
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -108,7 +101,7 @@ const LaunchpadPage = () => {
                   dashboard.
                 </p>
               </div>
-              {agencyDetails?.connectAccountId || connectStripeAccount ? (
+              {subAccountDetails?.connectAccountId || connectStripeAccount ? (
                 <CheckCircleIcon
                   size={50}
                   className="flex-shrink-0 p-2 text-primary"
@@ -125,15 +118,15 @@ const LaunchpadPage = () => {
             <div className="flex items-center justify-between w-full gap-2 p-4 border border-white/15 rounded-xl">
               <div className="flex md:items-center gap-4 flex-col md:!flex-row">
                 <img
-                  src={agencyDetails?.agencyLogo}
-                  alt="agency-logo"
+                  src={subAccountDetails.subAccountLogo}
+                  alt="subaccount-logo"
                   className="object-contain rounded-md size-20"
                 />
                 <p className="text-grayLight dark:text-grayDark">
                   Fill in all your bussiness details.
                 </p>
               </div>
-              {agencyExist ? (
+              {subAccountExists ? (
                 <CheckCircleIcon
                   size={50}
                   className="flex-shrink-0 p-2 text-primary"

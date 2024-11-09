@@ -14,15 +14,15 @@ const router = createRouter({ routeTree });
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <QueryProvider>
-        <ModalProvider>
+      <ModalProvider>
+        <QueryProvider>
           <UserProvider>
             <RootLayout>
               <RouterProvider router={router} />
             </RootLayout>
           </UserProvider>
-        </ModalProvider>
-      </QueryProvider>
+        </QueryProvider>
+      </ModalProvider>
     </ThemeProvider>
     <Toaster position="top-center" />
   </StrictMode>

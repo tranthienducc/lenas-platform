@@ -1,10 +1,12 @@
 import supabase from "@/utils/supabase";
+import { v4 as uuidv4 } from "uuid";
 
 export async function sendInvitation(role, email, agencyId) {
   try {
     const { data: invitationData, error: invitationError } = await supabase
       .from("Invitation")
       .insert({
+        id: uuidv4(),
         email: email,
         agencyId: agencyId,
         role: role,
@@ -15,7 +17,6 @@ export async function sendInvitation(role, email, agencyId) {
       return { error: invitationError.message };
     }
 
-    // Sử dụng Supabase Auth API để mời người dùng qua email
     const { error: authError } =
       await supabase.auth.admin.inviteUserByEmail(email);
 
@@ -24,7 +25,6 @@ export async function sendInvitation(role, email, agencyId) {
       return { error: authError.message };
     }
 
-    // Sau khi gửi email mời thành công
     return invitationData;
   } catch (error) {
     console.error("Unexpected error:", error);

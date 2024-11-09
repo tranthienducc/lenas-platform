@@ -31,7 +31,8 @@ const BilingPage = () => {
   const { data: prices } = useGetPricesFromStripe();
 
   const currentPlanDetails = pricingCards.find(
-    (pricing) => pricing.priceId === agencySubscription?.Subscription?.priceId
+    (pricing) =>
+      pricing.priceId === agencySubscription?.Subscription?.[0].priceId
   );
 
   const { data: charges } = useGetChargesFromStripe(agencySubscription);
@@ -48,14 +49,12 @@ const BilingPage = () => {
       : []),
   ];
 
-  console.log("cusomerid", agencySubscription);
-
   return (
     <>
       <SubscriptionHelper
         prices={prices?.data}
         customerId={agencySubscription?.customerId}
-        planeExists={agencySubscription?.Subscription?.active === true}
+        planeExists={agencySubscription?.Subscription?.[0].active === true}
       />
       <h1 className="text-4xl font-medium">Billing</h1>
       <Separator className="my-4" />
@@ -64,37 +63,38 @@ const BilingPage = () => {
       </h2>
       <div className="flex flex-col lg:!flex-row  justify-between gap-8">
         <PricingCard
-          planeExists={agencySubscription?.Subscription?.active === true}
+          planeExists={agencySubscription?.Subscription?.[0].active === true}
           prices={prices?.data}
           customerId={agencySubscription?.customerId || ""}
           amt={
-            agencySubscription?.Subscription?.active === true
+            agencySubscription?.Subscription?.[0].active === true
               ? currentPlanDetails?.price || "$0"
               : "$0"
           }
           buttonCta={
-            agencySubscription?.Subscription?.active === true
+            agencySubscription?.Subscription?.[0].active === true
               ? "Change Plan"
               : "Get started"
           }
           highlightDesciption="Want to modify your plan? You can do this here. If you have further question contact support@luma-app.com"
           highlightTitle="Plan Options"
           description={
-            agencySubscription?.Subscription?.active === true
+            agencySubscription?.Subscription?.[0].active === true
               ? currentPlanDetails?.description || "Let's get started"
               : "Lets get started! Pick a plan that works best for you."
           }
           duration="/ month"
           features={
-            agencySubscription?.Subscription?.active === true
+            agencySubscription?.Subscription?.[0].active === true
               ? currentPlanDetails?.features || []
               : currentPlanDetails?.features ||
                 pricingCards?.find(
                   (pricing) => pricing.title === "Starter" || []
-                )
+                ).features ||
+                []
           }
           title={
-            agencySubscription?.Subscription?.active === true
+            agencySubscription?.Subscription?.[0].active === true
               ? currentPlanDetails?.title || []
               : "Starter"
           }
@@ -102,7 +102,7 @@ const BilingPage = () => {
         {addOns?.data?.map((addOn) => (
           <PricingCard
             key={addOn.id}
-            planeExists={agencySubscription?.Subscription?.active === true}
+            planeExists={agencySubscription?.Subscription?.[0].active === true}
             prices={prices?.data}
             customerId={agencySubscription?.customerId || ""}
             amt={
@@ -187,15 +187,14 @@ function SubscriptionHelper({ prices, customerId, planeExists }) {
         async () => ({
           plans: {
             defaultPriceId: plan ? plan : "",
-            planes: prices,
+            plans: prices,
           },
         })
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plan]);
+  }, [customerId, plan, planeExists, prices, setOpen]);
 
-  return <>Subscription 124</>;
+  return <div>SubscriptionHelper</div>;
 }
 
 SubscriptionHelper.propTypes = {

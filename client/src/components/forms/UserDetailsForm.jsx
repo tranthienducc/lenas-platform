@@ -1,5 +1,4 @@
 import { getAuthUserDetail } from "@/lib/actions/user/get-auth-user-detail";
-import { useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import PropTypes from "prop-types";
@@ -7,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getUserPermission } from "@/lib/actions/user/get-user-permission";
 import { changeUserPermission } from "@/lib/actions/user/change-user-permission";
-import { v4 } from "uuid";
+
 import { saveActivityLogsNotification } from "@/lib/actions/notifications/saveActivityLogsNotification";
 import { toast } from "sonner";
 import { updatedUser } from "@/lib/actions/user/update-profile-by-email";
@@ -40,6 +39,7 @@ import { Button } from "@/components/ui/button";
 import IconsLoading from "@/components/icons/IconsLoading";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { useModal } from "@/providers/modal-provider";
 
 const userDataSchema = z.object({
   username: z.string().min(1),
@@ -59,90 +59,97 @@ const UserDetailsForms = ({ id, type, subAccounts, userData }) => {
   const [loadingPermission, setLoadingPermission] = useState(false);
   const [authUserData, setAuthUserData] = useState(null);
   const [file, setFile] = useState([]);
-
-  const router = useRouter();
+  const { data, setClose } = useModal();
 
   useEffect(() => {
-    if (userData) {
+    if (data.user) {
       const fetchDetails = async () => {
         const response = await getAuthUserDetail();
         if (response) setAuthUserData(response);
       };
       fetchDetails();
     }
-  }, [userData]);
+  }, [data]);
 
   const form = useForm({
     mode: "onChange",
     resolver: zodResolver(userDataSchema),
     defaultValues: {
-      username: userData?.username || "",
-      email: userData?.email || "",
-      profileImage: userData?.profileImage || "",
-      role: userData?.role || "",
+      username: userData ? userData?.username : data?.user?.username,
+      email: userData ? userData?.email : data?.user?.email,
+      profileImage: userData
+        ? userData?.profileImage
+        : data?.user?.profileImage,
+      role: userData ? userData?.role : data?.user?.role,
     },
   });
 
   useEffect(() => {
-    if (!userData) return;
+    if (!data.user) return;
     const getPermission = async () => {
-      if (!userData) return;
-      const permission = await getUserPermission(userData?.user_id);
+      if (!data.user) return;
+      const permission = await getUserPermission({
+        userId: data?.user?.user_id,
+      });
       setSubAccountPermission(permission);
     };
     getPermission();
-  }, [userData, form]);
+  }, [data, form]);
 
   const onChangePermission = async (subAccountId, val, permissionsId) => {
-    if (!userData?.email) return;
+    if (!data?.user?.email) return;
     setLoadingPermission(true);
     try {
       const response = await changeUserPermission(
-        permissionsId ? permissionsId : v4(),
-        userData?.email,
+        permissionsId,
+        data?.user?.email,
         subAccountId,
         val
       );
-      if (type === "agency") {
-        await saveActivityLogsNotification({
-          agencyId: authUserData?.agency?.id,
-          description: `Gave ${userData?.username} access to | ${subAccountPermission?.Permissions.find((permission) => permission.subAccountId === subAccountId)?.SubAccount?.name}`,
-          subAccountId: subAccountPermission?.Permissions?.find(
-            (p) => p.subAccountId === subAccountId
-          )?.SubAccount?.id,
-        });
-      }
 
       if (response) {
+        if (type === "agency") {
+          await saveActivityLogsNotification({
+            agencyId: authUserData?.agency?.id,
+            description: `Gave ${userData?.username} access to | ${
+              subAccountPermission?.Permissions.find(
+                (permission) => permission.subAccountId === subAccountId
+              )?.SubAccount?.name
+            }`,
+            subAccountId: subAccountId,
+          });
+        }
+
         toast("Success", {
-          description: "Successfully to change permission user",
+          description: "Successfully changed permission",
         });
 
         if (subAccountPermission) {
-          subAccountPermission?.Permissions.find((per) => {
-            if (per.subAccountId === subAccountId) {
-              return { ...per, access: !per?.access };
-            }
-            return per;
-          });
+          setSubAccountPermission((prev) => ({
+            ...prev,
+            Permissions: prev.Permissions.map((per) =>
+              per.subAccountId === subAccountId ? { ...per, access: val } : per
+            ),
+          }));
         }
       }
-
-      router.invalidate();
-      setLoadingPermission(false);
     } catch (error) {
-      console.log(error);
+      console.error("Permission change error:", error);
       toast.error("Failed to change permission");
+    } finally {
+      setLoadingPermission(false);
     }
   };
 
   const onSubmit = async (values) => {
     if (!id) return;
     try {
-      if (userData) {
+      if (userData || data?.user) {
         const updateUser = await updatedUser({
-          profileImage: file,
-          ...values,
+          user: {
+            profileImage: values.profileImage || file,
+            ...values,
+          },
         });
         authUserData?.agency?.SubAccount?.filter((sub) =>
           authUserData?.Permissions?.find(
@@ -159,8 +166,7 @@ const UserDetailsForms = ({ id, type, subAccounts, userData }) => {
           toast("Success", {
             description: "Update user infomation",
           });
-
-          router.invalidate();
+          setClose();
         } else {
           toast("Oppse!", {
             description: "Could not update user information",
@@ -171,6 +177,8 @@ const UserDetailsForms = ({ id, type, subAccounts, userData }) => {
       console.log(error);
     }
   };
+
+  console.log("user-detail-permission", id);
 
   return (
     <Card className="w-full">
@@ -305,24 +313,26 @@ const UserDetailsForms = ({ id, type, subAccounts, userData }) => {
                 </FormDescription>
 
                 <div className="flex flex-col gap-4">
-                  {subAccounts?.map((data) => {
+                  {subAccounts?.map((item) => {
                     const subAccountPermissionsDetails =
                       subAccountPermission?.Permissions?.find(
-                        (per) => per.subAccountId === subAccounts?.id
+                        (per) => per.subAccountId === item?.id
                       );
 
                     return (
                       <div
                         className="flex items-center justify-between p-4 border rounded-xl border-white/15"
-                        key={data?.id}
+                        key={item?.id}
                       >
-                        <p>{data?.name}</p>
+                        <p>{item?.name}</p>
                         <Switch
                           disabled={loadingPermission}
-                          checked={subAccountPermissionsDetails?.access}
+                          checked={
+                            subAccountPermissionsDetails?.access || false
+                          }
                           onCheckedChange={(per) => {
                             onChangePermission(
-                              data?.id,
+                              item?.id,
                               per,
                               subAccountPermissionsDetails?.id
                             );

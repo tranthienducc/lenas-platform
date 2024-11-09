@@ -1,6 +1,6 @@
 import supabase from "@/utils/supabase";
 
-export async function updatedUser(user) {
+export async function updatedUser({ user }) {
   try {
     const { data: userData, error: userError } = await supabase.auth.getUser();
 
@@ -11,17 +11,23 @@ export async function updatedUser(user) {
 
     const currentEmail = userData.user.email;
 
-    const { data, error } = await supabase
+    const { data: updatedProfile, error: profileError } = await supabase
       .from("profiles")
       .update({
         ...user,
       })
-      .eq("email", data?.email);
+      .eq("email", currentEmail)
+      .select("*")
+      .single();
+    if (profileError) {
+      console.error("Error updating profile:", profileError);
+      return { error: profileError.message };
+    }
 
-    if (data?.email !== currentEmail) {
-      const { data: updateData, error: updateError } =
+    if (user.email && user.email !== currentEmail) {
+      const { data: authUpdate, error: updateError } =
         await supabase.auth.updateUser({
-          email: data?.email,
+          email: user.email,
         });
 
       if (updateError) {
@@ -29,17 +35,13 @@ export async function updatedUser(user) {
         return { error: updateError.message };
       }
 
-      return updateData;
+      return {
+        ...updatedProfile,
+        authUpdate,
+      };
     }
 
-    console.log("Supabase response:", { data, error });
-
-    if (error) {
-      console.error("Supabase error:", error);
-      return { error: error.message };
-    }
-
-    return data;
+    return updatedProfile;
   } catch (error) {
     console.error("Unexpected error:", error);
     return { error: error.message };

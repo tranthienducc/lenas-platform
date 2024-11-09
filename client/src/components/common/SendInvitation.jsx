@@ -28,11 +28,11 @@ const userFormSchema = z.object({
   email: z.string().email(),
   role: z.enum(["AGENCY_ADMIN", "SUBACCOUNT_GUEST", "SUBACCOUNT_USER"]),
 });
-const SendInvitation = ({ agencyId }) => {
+const SendInvitation = ({ agencyId, setIsOpen }) => {
   const form = useForm({
     resolver: zodResolver(userFormSchema),
     defaultValues: {
-      emai: "",
+      email: "",
       role: "SUBACCOUNT_USER",
     },
   });
@@ -49,6 +49,7 @@ const SendInvitation = ({ agencyId }) => {
       toast("Success", {
         description: "Created and sent invitation",
       });
+      setIsOpen(false);
       return res;
     } catch (error) {
       console.log(error);
@@ -70,7 +71,7 @@ const SendInvitation = ({ agencyId }) => {
             <FormItem className="flex-1">
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="Email" {...field} />
+                <Input placeholder="Email" type="email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -88,7 +89,7 @@ const SendInvitation = ({ agencyId }) => {
                 defaultValue={field.value}
               >
                 <FormControl>
-                  <SelectTrigger asChild>
+                  <SelectTrigger>
                     <SelectValue placeholder="Select user role..." />
                   </SelectTrigger>
                 </FormControl>
@@ -119,4 +120,5 @@ export default SendInvitation;
 
 SendInvitation.propTypes = {
   agencyId: PropTypes.string,
+  setIsOpen: PropTypes.func,
 };

@@ -5,7 +5,6 @@ import MenuOptions from "@/layout/dashboard/_component/MenuOptions";
 
 const DashboardSideBar = ({ id, type }) => {
   const { data: users } = useGetAuthUserDetail();
-  if (!users?.agency) return;
 
   const details =
     type === "agency"
@@ -18,8 +17,8 @@ const DashboardSideBar = ({ id, type }) => {
   let sideBarLogo =
     users?.agency.agencyLogo || "/assets/images/avatar-user.png";
 
-  if (type === "subaccount" && !isWhiteLabelAgency) {
-    const subAccount = users?.[0].agency.SubAccount?.find(
+  if (type === "subaccount" && isWhiteLabelAgency) {
+    const subAccount = users?.agency.SubAccount?.find(
       (subaccount) => subaccount.id === id
     );
     sideBarLogo = subAccount?.subAccountLogo;

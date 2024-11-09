@@ -1,4 +1,4 @@
-import DialogUpdateUser from "@/components/common/DialogUpdateUser";
+import UserDetailsForms from "@/components/forms/UserDetailsForm";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,27 +20,29 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { deleteUser } from "@/lib/actions/user/delete-user";
+import getAllProfile from "@/lib/actions/user/get-all-profile";
 import { useGetAuthUserDetail } from "@/lib/tanstack-query/queries";
-import { Copy, MoreHorizontal, Trash } from "lucide-react";
+import CustomModal from "@/pages/subaccount/pipelines/_components/CustomModal";
+import { useModal } from "@/providers/modal-provider";
+import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { toast } from "sonner";
 
 const CellActions = ({ rowData }) => {
+  const { setOpen } = useModal();
   const { refetch } = useGetAuthUserDetail();
   const [isCopy, setIsCopy] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  if (!rowData?.agency) return null;
 
   const handleCopyEmail = (data) => {
     navigator.clipboard.writeText(data);
     setIsCopy(true);
   };
 
-  const handleDeleteUser = async (id) => {
+  const handleDeleteUser = async () => {
     try {
-      const response = await deleteUser(id);
+      const response = await deleteUser(rowData?.user_id);
 
       toast.success("Delete users", {
         description:
@@ -54,15 +56,17 @@ const CellActions = ({ rowData }) => {
     }
   };
 
+  // TODO: THÊM TÍNH NĂNG BAN USER
+
   return (
     <AlertDialog>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+        <DropdownMenuTrigger>
           <MoreHorizontal className="w-4 h-4 transition-all rounded-md cursor-pointer hover:bg-white/50" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={handleCopyEmail}>
+          <DropdownMenuItem onClick={() => handleCopyEmail(rowData.email)}>
             {isCopy ? (
               <Copy className="w-4 h-4 mr-2 text-green-500" />
             ) : (
@@ -71,11 +75,33 @@ const CellActions = ({ rowData }) => {
             Copy Email
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <DialogUpdateUser rowData={rowData} />
+          <DropdownMenuItem
+            className="flex gap-2"
+            onClick={() => {
+              setOpen(
+                <CustomModal
+                  subheading="You can change permissions only when the user has an owned subaccount"
+                  title="Edit User Details"
+                >
+                  <UserDetailsForms
+                    type="agency"
+                    id={rowData?.agency?.id || null}
+                    subAccounts={rowData?.agency?.SubAccount}
+                  />
+                </CustomModal>,
+                async () => {
+                  return {
+                    user: await getAllProfile({ userId: rowData?.user_id }),
+                  };
+                }
+              );
+            }}
+          >
+            <Edit size={15} />
+            Edit Details
           </DropdownMenuItem>
           {rowData?.role !== "AGENCY_OWNER" && (
-            <AlertDialogTrigger asChild>
+            <AlertDialogTrigger>
               <DropdownMenuItem className="text-red-600">
                 <Trash className="w-4 h-4 mr-2" /> Delete
               </DropdownMenuItem>

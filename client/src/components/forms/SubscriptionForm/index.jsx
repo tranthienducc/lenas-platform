@@ -28,7 +28,7 @@ const SubscriptionForm = ({ selectedPriceId }) => {
       const { error } = await stripeHook.confirmPayment({
         elements,
         confirmParams: {
-          return_url: `${import.meta.env.VITE_PUBLIC_URL}/dashboard`,
+          return_url: `${import.meta.env.VITE_PUBLIC_URL}/agency`,
         },
       });
 

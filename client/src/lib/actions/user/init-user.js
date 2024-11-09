@@ -9,16 +9,16 @@ export async function initUser(newUser) {
     const { data: userData, error } = await supabase
       .from("profiles")
       .upsert({
-        user_id: user.id, // Assuming `user.id` is available from Supabase's auth
+        user_id: user.id,
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-        role: newUser.role || "SUBACCOUNT_USER", // Default role if not provided
-        profileImage: user.profileImage, // Assuming user profile image is available
+        role: newUser.role || "SUBACCOUNT_USER",
+        profileImage: user.profileImage,
         createdAt: new Date(),
         updatedAt: new Date(),
       })
-      .single(); // .single() ensures you get one result, useful with upsert
+      .single();
 
     if (error) {
       throw new Error(`Failed to upsert user: ${error.message}`);

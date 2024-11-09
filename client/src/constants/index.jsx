@@ -30,6 +30,9 @@ export const partners = [
   {
     path: "/assets/images/logo-partner-5.svg",
   },
+  {
+    path: "/assets/images/logo-partner-5.svg",
+  },
 ];
 
 export const features = [
@@ -38,7 +41,7 @@ export const features = [
     description:
       "Instantly integrate copy/paste-ready code into your projects, accelerating development without sacrificing quality.",
     className:
-      "hover:bg-red-500/10 dark:hover:hover:bg-red-500/70 transition-all duration-500 ease-out border border-black/15 dark:border-white/15",
+      "hover:bg-red-500/10 dark:hover:hover:bg-red-500/70 transition-all duration-500 ease-out border border-black/15 dark:border-white/5",
     content: (
       <>
         <Safari
@@ -54,7 +57,7 @@ export const features = [
     description:
       "Easily implement powerful form validations with support for both Zod and Yup, ensuring data accuracy with minimal effort.",
     className:
-      "order-3 xl:order-none hover:bg-blue-500/10 dark:hover:hover:bg-blue-500/70 transition-all duration-500 ease-out border border-black/15 dark:border-white/15",
+      "order-3 xl:order-none hover:bg-blue-500/10 dark:hover:hover:bg-blue-500/70 transition-all duration-500 ease-out border border-black/15 dark:border-white/5",
     content: (
       <>
         <Safari
@@ -70,7 +73,7 @@ export const features = [
     description:
       "Access a complete set of pre-built components tailored for dynamic forms, saving you time and effort.",
     className:
-      "md:row-span-2 hover:bg-orange-500/10 dark:hover:hover:bg-orange-500/70  transition-all duration-500 ease-out border border-black/15 dark:border-white/15",
+      "md:row-span-2 hover:bg-orange-500/10 dark:hover:hover:bg-orange-500/70  transition-all duration-500 ease-out border border-black/15 dark:border-white/5",
     content: (
       <>
         <Safari
@@ -86,7 +89,7 @@ export const features = [
     description:
       "Customize form behavior effortlessly with support for Yup, server-side rendering, and other powerful tools.",
     className:
-      "flex-row order-4 md:col-span-2 md:flex-row xl:order-none hover:bg-green-500/10 transition-all duration-500 ease-out dark:hover:hover:bg-green-500/70 border border-black/15 dark:border-white/15",
+      "flex-row order-4 md:col-span-2 md:flex-row xl:order-none hover:bg-green-500/10 transition-all duration-500 ease-out dark:hover:hover:bg-green-500/70 border border-black/15 dark:border-white/5",
     content: (
       <>
         <Safari

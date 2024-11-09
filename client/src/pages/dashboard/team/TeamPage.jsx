@@ -6,6 +6,7 @@ import {
 import { columns } from "@/pages/dashboard/team/_components/Columns";
 import DataTable from "@/pages/dashboard/team/_components/DataTable";
 import { useParams } from "@tanstack/react-router";
+
 import { Suspense } from "react";
 
 const TeamPage = () => {
@@ -13,8 +14,7 @@ const TeamPage = () => {
   const { data: agencyDetails } = useGetAgencyBySub(id);
   const { data: teamMembers } = useGetTeamMembersByAgency(id);
 
-  console.log("agencyDetails", agencyDetails);
-  console.log("teamMembers", teamMembers);
+  console.log("team-page", teamMembers);
 
   return (
     <Suspense fallback={<Skeleton className="w-full h-10" />}>

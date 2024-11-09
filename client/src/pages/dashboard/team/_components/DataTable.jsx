@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
 import {
   flexRender,
   getCoreRowModel,
@@ -17,7 +18,7 @@ import {
 import { Search } from "lucide-react";
 import PropTypes from "prop-types";
 
-const DataTable = ({ agencyId, data, filterValue, columns }) => {
+const DataTable = ({ data, filterValue, columns, agencyId }) => {
   const safeColumn = Array.isArray(columns) ? columns : [];
   const table = useReactTable({
     data: data || [],
@@ -25,6 +26,11 @@ const DataTable = ({ agencyId, data, filterValue, columns }) => {
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
   });
+
+  console.log(
+    "table",
+    table.getRowModel().rows.map((item) => item)
+  );
 
   return (
     <>
@@ -99,8 +105,8 @@ const DataTable = ({ agencyId, data, filterValue, columns }) => {
 export default DataTable;
 
 DataTable.propTypes = {
-  agencyId: PropTypes.string,
   data: PropTypes.array,
   filterValue: PropTypes.string,
   columns: PropTypes.array,
+  agencyId: PropTypes.string,
 };

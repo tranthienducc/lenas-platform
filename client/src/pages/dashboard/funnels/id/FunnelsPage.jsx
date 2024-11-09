@@ -30,13 +30,13 @@ const FunnelsPage = () => {
     }
   }, [funnelPages, id, navigate]);
 
-  console.log("is-wrong?", funnelPages);
+  console.log("id", id);
 
   return (
     <>
       <Link
-        to={`/subaccount/${id}/funnel`}
-        className="flex justify-between gap-4 mb-4 text-muted-foreground"
+        to={`/subaccount/${id}/funnels`}
+        className="flex justify-between gap-4 mb-4 text-muted-foreground w-fit"
       >
         Back
       </Link>

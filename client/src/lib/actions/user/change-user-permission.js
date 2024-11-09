@@ -1,4 +1,5 @@
 import supabase from "@/utils/supabase";
+import { v4 } from "uuid";
 
 export async function changeUserPermission(
   permissionId,
@@ -7,35 +8,26 @@ export async function changeUserPermission(
   permission
 ) {
   try {
-    let data, error;
     if (permissionId) {
-      // Update the existing permission if permissionId is provided
-      ({ data, error } = await supabase
-        .from("Permissions") // Assuming 'Permissions' is the table name
+      const { data, error } = await supabase
+        .from("Permissions")
         .update({ access: permission })
-        .eq("id", permissionId));
+        .eq("id", permissionId);
+
+      if (error) throw error;
+      return data;
     } else {
-      // Insert new permission if no permissionId is provided
-      ({ data, error } = await supabase.from("Permissions").insert({
+      const { data, error } = await supabase.from("Permissions").insert({
+        id: v4(),
         email: userEmail,
         subAccountId: subAccountId,
         access: permission,
-      }));
+      });
+
+      if (error) throw error;
+      return data;
     }
-
-    // Check for errors in Supabase query
-    if (error) {
-      console.error("Supabase error:", error);
-      return { error: error.message };
-    }
-
-    // Log the Supabase response for debugging
-    console.log("Supabase response:", data);
-
-    // Return the fetched data
-    return data;
   } catch (error) {
-    // Xử lý các lỗi không mong đợi
     console.error("Unexpected error:", error);
     return { error: error.message };
   }

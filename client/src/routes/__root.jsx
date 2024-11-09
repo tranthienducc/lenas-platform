@@ -3,7 +3,6 @@ import SubdomainPage from "@/pages/domain/SubdomainPage";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 
 function RootComponent() {
-  // Lấy hostname hiện tại
   const hostname = window.location.hostname;
 
   const isSubdomain =

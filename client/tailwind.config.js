@@ -15,6 +15,7 @@ export default {
       backgroundImage: {
         signInPattern: "url('/assets/images/login-img.png')",
         "hero-pattern": "url('/assets/images/bg-hero.svg')",
+        "hero-pattern-bottom": "url('/assets/images/bg-hero-bottom.svg')",
       },
       fontFamily: {
         GeistSans: "Geist Sans",

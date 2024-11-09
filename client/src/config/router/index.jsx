@@ -17,20 +17,19 @@ import {
 
 export const navigation = [
   {
-    href: "/pricing",
-    label: "Pricing",
+    title: "Draw",
+    href: "/features/draw",
+    description: "Draw wireframe by drawing tool",
   },
   {
-    href: "/feature",
-    label: "Feature",
+    title: "Feature 2",
+    href: "/features/feature-2",
+    description: "Description for Feature 2",
   },
   {
-    href: "/docs",
-    label: "Docs",
-  },
-  {
-    href: "/tools",
-    label: "Tools",
+    title: "Feature 3",
+    href: "/features/feature-3",
+    description: "Description for Feature 3",
   },
 ];
 

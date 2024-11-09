@@ -8,6 +8,7 @@ const Footer = () => {
 
   return (
     <footer className="my-[21%] relative pb-[90px] px-32">
+      <div className="absolute inset-0 z-0 bg-center bg-cover bg-hero-pattern-bottom rounded-br-[10px]"></div>
       <nav className="flex flex-col flex-wrap justify-between w-full">
         <div className="grid w-full grid-cols-footer">
           {Object.entries(footerData).map(([sectionTitle, links]) => (

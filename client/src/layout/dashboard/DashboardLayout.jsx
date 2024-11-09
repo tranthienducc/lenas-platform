@@ -39,7 +39,7 @@ export const DashboardLayout = () => {
       <DashboardSideBar id={id} type="agency" />
       <section className="grid h-screen">
         <BlurPage>
-          <InfoBar notifications={allNoti} role={allNoti?.[0]?.User.role} />
+          <InfoBar notifications={allNoti} role={allNoti?.[0]?.User?.role} />
           <Outlet />
         </BlurPage>
       </section>

@@ -30,7 +30,7 @@ export const columns = [
       return (
         <div className="relative flex-none size-11">
           <img
-            src={avatarUrl}
+            src={avatarUrl || "/assets/images/avatar-user.png"}
             alt="avatar-user"
             className="object-cover w-full h-full rounded-full"
           />
@@ -63,6 +63,9 @@ export const columns = [
       const accessibleSubAccounts = subAccounts.filter((subAccount) =>
         accessibleSubAccountIds.includes(subAccount?.id)
       );
+
+      console.log("accessibleSubAccountIds", accessibleSubAccountIds);
+      console.log("accessibleSubAccounts", accessibleSubAccounts);
 
       return (
         <div className="flex flex-col items-start">

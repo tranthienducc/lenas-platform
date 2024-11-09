@@ -2,7 +2,12 @@ import supabase from "@/utils/supabase";
 
 export async function getAllAgency() {
   try {
-    const { data: agencies, error } = await supabase.from("agency").select(`*`);
+    const { data: agencies, error } = await supabase.from("agency").select(
+      `
+      *,
+      SubAccount (*)
+      `
+    );
 
     console.log("Supabase response:", { agencies, error });
     if (error) {

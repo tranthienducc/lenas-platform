@@ -5,7 +5,8 @@ export async function getCollectSubAccount({ agencyId }) {
     const { data: subAccountData, error: subAccountError } = await supabase
       .from("SubAccount")
       .select("*")
-      .eq("agencyId", agencyId);
+      .eq("agencyId", agencyId)
+      .maybeSingle();
 
     if (subAccountError) {
       console.error("Supabase error:", subAccountError);

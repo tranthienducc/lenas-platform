@@ -12,7 +12,7 @@ import {
   useGetCurrentUser,
 } from "@/lib/tanstack-query/queries";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { CirclePlus, LogOut } from "lucide-react";
+import { ArrowLeft, LogOut } from "lucide-react";
 import PropTypes from "prop-types";
 
 const PopoverUser = ({ user }) => {
@@ -59,11 +59,11 @@ const PopoverUser = ({ user }) => {
           </li>
           <li className="rounded-md hover:bg-grayLight dark:hover:bg-[#181818] p-2 dark:hover:text-white hover:text-black text-grayLight dark:text-grayDark">
             <Link
-              to="/dashboard"
+              to="/"
               className="flex flex-row items-center justify-between w-full max-w-full"
             >
-              Create Team
-              <CirclePlus className="size-4" />
+              Home
+              <ArrowLeft className="size-4" />
             </Link>
           </li>
           <Separator className="my-2 bg-white/25" />

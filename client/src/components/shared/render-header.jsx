@@ -1,24 +1,17 @@
 import Header from "@/components/shared/header";
-import { useRouter } from "@tanstack/react-router";
+import { useRouterState } from "@tanstack/react-router";
+import { useMemo } from "react";
 
 const RenderHeader = () => {
-  const router = useRouter();
-  const showHeaderRoutes = [
-    "/dashboard/site-manage",
-    "/dashboard",
-    "/dashboard/ai",
-    "/dashboard/site-manage",
-    "/dashboard/chat-team",
-    "/dashboard/settings",
-    "/login",
-    "/subaccount",
-  ];
+  const router = useRouterState();
 
-  const shouldShowHeader = !showHeaderRoutes.some((route) =>
-    router.state.location.pathname.startsWith(route)
-  );
+  const hideHeaderPattern = useMemo(() => {
+    return /^\/(dashboard|login|subaccount)(\/|$)/;
+  }, []);
 
-  return <>{shouldShowHeader && <Header />}</>;
+  const shouldShowHeader = !hideHeaderPattern.test(router.location.pathname);
+
+  return shouldShowHeader ? <Header /> : null;
 };
 
 export default RenderHeader;

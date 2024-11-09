@@ -30,10 +30,10 @@ const PricingCard = ({
   const plan = searchParams?.plan;
   const { setOpen } = useModal();
 
-  const handleManagePlan = async () => {
+  const handleManagePlan = () => {
     setOpen(
       <CustomModal
-        title={"Manage Your Plan"}
+        title="Manage Your Plan"
         subheading="You can change your plan at any time from the billings settings"
       >
         <SubscriptionFormWrapper
@@ -41,12 +41,12 @@ const PricingCard = ({
           planExists={planExists}
         />
       </CustomModal>,
-      {
+      async () => ({
         plans: {
-          defaultPriceId: plan || "",
+          defaultPriceId: plan ? plan : "",
           plans: prices,
         },
-      }
+      })
     );
   };
 

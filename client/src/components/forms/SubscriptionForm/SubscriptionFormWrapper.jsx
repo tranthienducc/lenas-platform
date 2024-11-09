@@ -66,10 +66,17 @@ const SubscriptionFormWrapper = ({ customerId, planExists }) => {
     };
 
     createSecret();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, selectedPriceId, customerId]);
+  }, [
+    data,
+    selectedPriceId,
+    customerId,
+    subscriptionExists,
+    planExists,
+    setClose,
+  ]);
 
-  console.log("subscription-form", subscriptionExists);
+  console.log("subscription-form-customerId", customerId);
+  console.log("subscription-form-data?.plans?.defaultPriceId", data.plans);
 
   return (
     <div className="transition-all border-none">

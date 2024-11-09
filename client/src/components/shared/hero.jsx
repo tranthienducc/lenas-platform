@@ -12,7 +12,7 @@ const Hero = () => {
         <div className="flex flex-col items-center justify-center text-center">
           <div
             className={cn(
-              "group rounded-full border border-black/5 bg-neutral-100 text-base text-white transition-all ease-in hover:cursor-pointer hover:bg-neutral-200 dark:border-white/5 dark:bg-transparent dark:hover:bg-neutral-800"
+              "group rounded-full border border-black/25 bg-neutral-100 text-base text-white transition-all ease-in hover:cursor-pointer hover:bg-neutral-200 dark:border-white/5 dark:bg-transparent dark:hover:bg-neutral-800"
             )}
           >
             <AnimatedShinyText className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
@@ -23,7 +23,7 @@ const Hero = () => {
             </AnimatedShinyText>
           </div>
           <IconsShape className="absolute bottom-0 top-[7.3rem] left-44" />
-          <IconsShape className="absolute right-[10.3rem] bottom-[10.7rem]" />
+          <IconsShape className="absolute right-[10.3rem] bottom-[50.7rem]" />
           <h1 className="text-[70px] leading-[81.6px] font-bold max-w-[1088px] w-full text-black dark:bg-gradient-text z-30 pt-5">
             Elevate your brand with unmatched creative excellence
           </h1>
@@ -32,37 +32,28 @@ const Hero = () => {
             website or app and better position your brand.
           </p>
 
-          <div className="flex items-center gap-6 mt-8">
-            <Link
-              href="/"
-              className="flex items-center gap-[10px] px-6 py-2 bg-black rounded-full shadow dark:bg-[#ededed] dark:hover:bg-grayC justify-center"
-            >
-              <Triangle className="border-none outline-none size-6 dark:fill-black fill-white" />
-              <span className="text-lg font-medium text-white dark:text-black">
-                Start wrap
-              </span>
-            </Link>
-            <Link
-              href="/"
-              className="px-6 py-2 bg-white rounded-full dark:border-white/20 shadow dark:bg-[#0a0a0a] dark:hover:bg-white/50 border"
-            >
-              <span className="text-lg font-medium text-black dark:text-white">
-                Get a demo
-              </span>
-            </Link>
-          </div>
+          <Link
+            href="/"
+            className="flex items-center gap-[10px] px-6 py-2 bg-black rounded-full shadow dark:bg-[#ededed] dark:hover:bg-grayC justify-center mt-8"
+          >
+            <Triangle className="border-none outline-none size-6 dark:fill-black fill-white" />
+            <span className="text-lg font-medium text-white dark:text-black">
+              Get a demo
+            </span>
+          </Link>
 
-          <div className="relative mt-[17%] w-full">
+          <div className="relative mt-[8%] w-full">
             <img
-              src="/assets/images/bg-img.jpg"
-              alt="preview"
-              className="max-w-[1328px] w-full h-[26rem] rounded-xl border-2 border-muted"
-              loading="lazy"
+              src={"/assets/images/bg-img.webp"}
+              alt="banner image"
+              height={1200}
+              width={1200}
+              className="w-full border-2 rounded-tl-2xl rounded-tr-2xl border-muted"
             />
             <div className="absolute bottom-0 left-0 right-0 z-10 top-1/2 bg-gradient-to-t dark:from-background"></div>
           </div>
 
-          <div className="relative -mt-[1rem] text-transparent bg-gradient-to-r from-blue-400 to-white bg-clip-text">
+          <div className="relative z-10 -mt-20 bg-gradient-text">
             <h2 className="font-bold text-9xl">Luma</h2>
           </div>
 
@@ -83,7 +74,7 @@ export default Hero;
 
 function StaticLogoCloud() {
   return (
-    <div className="grid grid-cols-3 gap-x-6 md:grid-cols-5 lg:grid-cols-6">
+    <div className="grid grid-cols-3 gap-x-[5.5rem] md:grid-cols-5 lg:grid-cols-6">
       {partners.map((logo, key) => (
         <img
           key={key}

@@ -69,13 +69,14 @@ const PricingPage = () => {
               </CardContent>
               <CardFooter className="flex flex-col items-start gap-4">
                 {pricingCards
-                  .find((c) => c.title === card?.nickname)
-                  ?.features((feature) => (
+                  .find((c) => c.title === card.nickname)
+                  ?.features.map((feature) => (
                     <div key={feature} className="flex gap-2">
                       <Check />
                       <p>{feature}</p>
                     </div>
                   ))}
+
                 <Link
                   to={`/dashboard?plan=${card?.id}`}
                   className={clsx(
