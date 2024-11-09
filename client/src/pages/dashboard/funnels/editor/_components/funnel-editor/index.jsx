@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { getFunnelPageUnique } from "@/lib/actions/funnels/get-funnel-page-unique";
 import DraggableEditorContainer from "@/pages/dashboard/funnels/editor/_components/DraggableEditorContainer";
-import { Recursive } from "@/pages/dashboard/funnels/editor/_components/funnel-editor/funnel-edit-components";
+import Recursive from "@/pages/dashboard/funnels/editor/_components/funnel-editor/funnel-edit-components/recursive";
 
 import { useEditor } from "@/providers/editor/editor-provider";
 import clsx from "clsx";
