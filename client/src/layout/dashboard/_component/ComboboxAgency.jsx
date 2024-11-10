@@ -1,5 +1,3 @@
-"use client";
-
 import { ChevronsUpDown, Compass } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
