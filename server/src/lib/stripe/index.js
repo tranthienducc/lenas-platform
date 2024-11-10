@@ -1,4 +1,4 @@
-const Stripe = require("stripe");
+import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.SERVER_STRIPE_SECRET_KEY, {
   apiVersion: "2024-06-20",
@@ -8,4 +8,4 @@ const stripe = new Stripe(process.env.SERVER_STRIPE_SECRET_KEY, {
   },
 });
 
-module.exports = { stripe };
+export default stripe;

@@ -6,21 +6,19 @@ async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { address, email, name, shipping } = req.body;
+  const { code } = req.body;
 
-  if (!email || !address || !name || !shipping) {
+  if (!code) {
     return res.status(400).json({ error: "Missing data" });
   }
 
   try {
-    const customer = await stripe.customers.create({
-      email,
-      name,
-      address,
-      shipping,
+    const response = await stripe.oauth.token({
+      grant_type: "authorization_code",
+      code: code,
     });
 
-    return res.json({ customerId: customer.id });
+    return res.json(response);
   } catch (error) {
     console.error("🔴 Error", error);
     return res.status(500).json({ error: "Internal Server Error" });

@@ -1,4 +1,4 @@
-const supabase = require("../supabase/supabase");
+import supabase from "../supabase/supabase";
 
 const getSubdomain = (host) => {
   const isDevelopment = process.env.NODE_ENV === "development";
@@ -41,7 +41,6 @@ const authMiddleware = async (req, res, next) => {
         req.url = `${customSubDomain}${req.url}`;
       }
 
-      // Handle root path for subdomains
       if (req.path === "/") {
         return res.redirect(`${customSubDomain}`);
       }
@@ -86,4 +85,4 @@ const pathMatcher = async (req, res, next) => {
   next();
 };
 
-module.exports = { authMiddleware, pathMatcher, corsOptions };
+export { authMiddleware, pathMatcher, corsOptions };

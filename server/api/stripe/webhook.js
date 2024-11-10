@@ -1,3 +1,4 @@
+import { withMiddleware } from "../../src/lib/middleware/withMiddleware.js";
 import { stripe } from "../../src/lib/stripe/index.js";
 import { subscriptionCreated } from "../../src/lib/stripe/stripeActions.js";
 
@@ -12,7 +13,7 @@ const stripeWebhookEvents = new Set([
   "customer.subscription.deleted",
 ]);
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -77,3 +78,5 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: `Webhook Error: ${error.message}` });
   }
 }
+
+export default withMiddleware(handler);

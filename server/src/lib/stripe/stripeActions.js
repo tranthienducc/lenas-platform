@@ -1,9 +1,8 @@
-const supabase = require("../supabase/supabase");
-const { v4: uuidv4 } = require("uuid");
+import supabase from "../supabase/supabase";
+import { v4 as uuidv4 } from "uuid";
 
-async function subscriptionCreated(subscription, customerId) {
+export async function subscriptionCreated(subscription, customerId) {
   try {
-    // Fetch agency based on customerId
     const { data: agency, error: agencyError } = await supabase
       .from("agency")
       .select("*")
@@ -17,7 +16,6 @@ async function subscriptionCreated(subscription, customerId) {
       return { error: agencyError.message };
     }
 
-    // Prepare the subscription data
     const data = {
       id: uuidv4(),
       active: subscription.status === "active",
@@ -31,7 +29,6 @@ async function subscriptionCreated(subscription, customerId) {
       updatedAt: new Date().toISOString(),
     };
 
-    // Upsert subscription record
     const { data: upsertedSubscription, error: upsertError } = await supabase
       .from("Subscription")
       .upsert(data, {
@@ -49,7 +46,3 @@ async function subscriptionCreated(subscription, customerId) {
     return { error: error.message };
   }
 }
-
-module.exports = {
-  subscriptionCreated,
-};
