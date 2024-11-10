@@ -39,13 +39,15 @@ export default defineConfig({
   build: {
     outDir: "dist",
     assetsDir: "assets",
-    sourcemap: true,
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ["react", "react-dom"],
+          tanstack: ["@tanstack/react-query", "@tanstack/react-router"],
         },
       },
     },
+    chunkSizeWarningLimit: 1000,
   },
 });
